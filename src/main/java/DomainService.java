@@ -13,6 +13,8 @@ public class DomainService {
 
 	private static final Integer numberOfDomains = 10;
 	private static final List<String> domainList = new ArrayList<String>();
+	private static final String apiKey = "--please substitute with appropriate api key--";
+	
 	public static void main(String args[]) throws IOException {
 		initializeDomainList();//
 		callDomains();//
@@ -35,8 +37,8 @@ public class DomainService {
 
 	private static void getAverageMetric() {
 
-		Response laptopAmazonReport = RestAssured.get("http://api.semrush.com/reports/v1/projects/1238683/tracking/?key=27d2fde07fbcfd52c18c50abf8f53757&action=report&type=tracking_overview_organic&url=*.amazon.com/*");
-		Response tvAmazonReport = RestAssured.get("http://api.semrush.com/reports/v1/projects/1238669/tracking/?key=27d2fde07fbcfd52c18c50abf8f53757&action=report&type=tracking_overview_organic&url=*.amazon.com/*");
+		Response laptopAmazonReport = RestAssured.get("http://api.semrush.com/reports/v1/projects/1238683/tracking/?key="+apiKey+"&action=report&type=tracking_overview_organic&url=*.amazon.com/*");
+		Response tvAmazonReport = RestAssured.get("http://api.semrush.com/reports/v1/projects/1238669/tracking/?key="+apiKey+"&action=report&type=tracking_overview_organic&url=*.amazon.com/*");
 
 		// we are comparing visibility metrics and averaging it out
 		float visibilityOfLaptop = laptopAmazonReport.jsonPath().get("visibility");
@@ -50,7 +52,7 @@ public class DomainService {
 
 
 	private static void getHistoricalData(String domain) throws IOException {
-		Response resp = RestAssured.get("https://api.semrush.com/?type=domain_rank_history&key=27d2fde07fbcfd52c18c50abf8f53757&display_limit=12&export_columns=Rk,Or,Ot,Oc,Ad,At,Ac,Dt&domain="+domain+"&database=us");
+		Response resp = RestAssured.get("https://api.semrush.com/?type=domain_rank_history&key="+apiKey+"&display_limit=12&export_columns=Rk,Or,Ot,Oc,Ad,At,Ac,Dt&domain="+domain+"&database=us");
 		BufferedReader br = new BufferedReader(new StringReader(resp.asString()));
 		String currentLine;
 		int i = 0;
@@ -86,7 +88,7 @@ public class DomainService {
 
 	private static void callDomains() {
 		for(int i = 0 ; i < domainList.size(); i++) {
-			Response resp = RestAssured.get("http://api.semrush.com/?key=27d2fde07fbcfd52c18c50abf8f53757&type=domain_rank&export_columns=Dn,Om,Rk,Tm&domain="+domainList.get(i)+"&database=us&display_limit=10");
+			Response resp = RestAssured.get("http://api.semrush.com/?key="+apiKey+"&type=domain_rank&export_columns=Dn,Om,Rk,Tm&domain="+domainList.get(i)+"&database=us&display_limit=10");
 			System.out.println("data for "+ domainList.get(i)+" ="+resp.prettyPrint());
 		}
 	}

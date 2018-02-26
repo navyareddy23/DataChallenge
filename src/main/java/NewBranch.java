@@ -1,5 +1,5 @@
 
 public class NewBranch {
 
-  int a = 10;
+  int a = 5;
 }
